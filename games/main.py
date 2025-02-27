@@ -24,24 +24,45 @@ def main(archivo_torneo:str):
 
         soccer = sport("Soccer", 11, "FIFA")
         mexico = Team("Mexico", soccer, lista_mexico)
-        espania = Team("Espania", soccer, lista_espania)
-        juego = Game(mexico, espania)
-        torneo = [juego.to_json()]
+        espania = Team("España", soccer, lista_espania)
+        brasil = Team("Brasil", soccer, lista_brazil)
+        argentina = Team("Argentina", soccer, lista_argentina)
+        equipos = [mexico, espania, brasil, argentina]
+
+        d = {}
+        for local in equipos:
+            for visitante in equipos:
+                if local != visitante:
+                    juego = Game(local, visitante)
+                    partido = f'{local} - {visitante}'
+                    partido_2 = f'{visitante} - {local}'
+                    if partido not in d and partido_2 not 
+                    d[partido] = juego.to_json()
+        #print(d.keys())
+        torneo = list(d.values())    
+        #juego = Game(mexico, espania)
+        #torneo = [juego.to_json()]
         archivo_torneo = "torneo.json"
         with open(archivo_torneo, "w", encoding='utf8') as f:
             json.dump(torneo, f, ensure_ascii=False, indent=4)
-        print(f"SSe escribio el archivo {archivo_torneo} con un toreno de {len(torneo)} juego(s)")
-    #juagr todos los juegos del torneo
-    for juego in torneo: 
-        A = Team(juego['A']['name'], sport(juego['A']['sport']['name'], juego['A']['sport']['players'], juego['A']['sport']['league']), [Athlete(x['name']) for x in juego['A']['players']])
-        B = Team(juego['B']['name'], sport(juego['B']['sport']['name'], juego['B']['sport']['players'], juego['B']['sport']['league']), [Athlete(x['name']) for x in juego['B']['players']])
+        print(f"Se escribió el archivo {archivo_torneo} con un torneo de {len(torneo)} juego(s)")
+    # Jugar todos los juegos del torneo
+    for juego in torneo:
+        A = Team(juego['A']['name'], 
+                 sport(juego['A']['sport']['name'], 
+                       juego['A']['sport']['players'],
+                       juego['A']['sport']['league']), 
+                [Athlete(x['name']) for x in juego['A']['players']])
+        B = Team(juego['B']['name'],
+                 sport(juego['B']['sport']['name'],
+                       juego['B']['sport']['players'],
+                       juego['B']['sport']['league']),
+                [Athlete(x['name']) for x in juego['B']['players']])
         game = Game(A, B)
         game.play()
         print(game)
-        print("-------")
+        print("----------------")
 
 if __name__ == "__main__":
     archivo = "torneo.json"
     main(archivo)
-
-    #copiar de github pq ya no tengo carga en mi compu
