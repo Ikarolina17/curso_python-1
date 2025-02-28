@@ -1,31 +1,44 @@
 '''
-Archivo principal de la clase Games
+Archivo principal del juego Games
 '''
+import json
 from Athlete import Athlete
 from sport import sport
 from Team import Team
 from game import Game
-import json
+import game_logic as gl
+
 
 def main(archivo_torneo:str):
-    '''funcion principal del juego'''
+    ''' Función principal del juego '''
     if archivo_torneo != "":
-        with open(archivo_torneo, "r") as file:
-            torneo = json.load(file)
-    else: 
-        players_mexico = ['Chicharito','Piojo','Chucky','Tecatito','Gullit','Ochoa','Guardado','Herrera','Layun','Moreno','Araujo']
-        players_espania = ['Casillas','Ramos','Pique','Alba','Iniesta','Silva','Isco','Busquets','Costa','Morata','Asensio']
-        players_brazil = ['Neymar','Coutinho','Marcelo','Casemiro','Alisson','Jesus','Paulinho','Silva','Firmino','Costa','Danilo']
-        players_argentina = ['Messi','Aguero','Di Maria','Mascherano','Higuain','Banega','Rojo','Otamendi','Perez','Mercado','Caballero']
+        with open(archivo_torneo, "r", encoding='utf8') as f:
+            torneo = json.load(f)
+    else:
+        players_mexico = ['Chicharito', 'Piojo', 'Chucky', 
+                          'Tecatito', 'Gullit', 'Ochoa', 
+                          'Guardado', 'Herrera', 'Layun', 
+                          'Moreno', 'Araujo']
+        players_espania = ['Casillas', 'Ramos', 'Pique', 
+                           'Alba', 'Iniesta', 'Silva', 
+                           'Isco', 'Busquets', 'Costa', 
+                           'Morata', 'Asensio']
+        players_brasil = ['Neymar', 'Coutinho', 'Marcelo',
+                            'Casemiro', 'Alisson', 'Jesus',
+                            'Paulinho', 'Thiago', 'Silva',
+                            'Firmino', 'Danilo']
+        players_argentina = ['Messi', 'Aguero', 'Di Maria',
+                             'Mascherano', 'Higuain', 'Dybala',
+                             'Otamendi', 'Romero', 'Rojo',
+                             'Banega', 'Fazio']
         lista_mexico = [Athlete(x) for x in players_mexico]
         lista_espania = [Athlete(x) for x in players_espania]
-        lista_brazil = [Athlete(x) for x in players_brazil]
-        lista_argentina = [Athlete(x) for x in players_argentina]
-
+        lista_brasil = [Athlete(x) for x in players_brasil]
+        lista_argentina = [Athlete(x) for x in players_argentina]  
         soccer = sport("Soccer", 11, "FIFA")
         mexico = Team("Mexico", soccer, lista_mexico)
         espania = Team("España", soccer, lista_espania)
-        brasil = Team("Brasil", soccer, lista_brazil)
+        brasil = Team("Brasil", soccer, lista_brasil)
         argentina = Team("Argentina", soccer, lista_argentina)
         equipos = [mexico, espania, brasil, argentina]
 
@@ -36,10 +49,10 @@ def main(archivo_torneo:str):
                     juego = Game(local, visitante)
                     partido = f'{local} - {visitante}'
                     partido_2 = f'{visitante} - {local}'
-                    if partido not in d and partido_2 not 
-                    d[partido] = juego.to_json()
+                    if partido not in d and partido_2 not in d:
+                        d[partido] = juego.to_json()
         #print(d.keys())
-        torneo = list(d.values())    
+        torneo = list(d.values())
         #juego = Game(mexico, espania)
         #torneo = [juego.to_json()]
         archivo_torneo = "torneo.json"
@@ -61,7 +74,14 @@ def main(archivo_torneo:str):
         game = Game(A, B)
         game.play()
         print(game)
+        juego['score'] = game.score
         print("----------------")
+        #Calcular el tablero de puntuacion
+    for juego in torneo:
+        print(juego['score'])
+    #torneo = gl.json_to_tournament(torneo)
+    tablero = gl.scoring(torneo)
+    gl.display_tablero(tablero)
 
 if __name__ == "__main__":
     archivo = "torneo.json"
